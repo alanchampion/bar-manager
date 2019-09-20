@@ -13,19 +13,21 @@ namespace BarManager.Models
         [Required]
         public string User { get; set; } = "ERROR USER";
 
-        [StringLength(60, MinimumLength = 1)]
+        [StringLength(60, MinimumLength = 1, ErrorMessage = "Name can not be longer than 60 characters.")]
         [Required]
         public string Name { get; set; }
 
+        [StringLength(1000, ErrorMessage = "Instructions can not be longer than 1000 characters.")]
         [Required]
         public string Instructions { get; set; }
 
+        [StringLength(100, ErrorMessage = "Description can not be longer than 100 characters.")]
         public string Description { get; set; }
 
-        [Range(1,100)]
+        [Range(0,100, ErrorMessage = "Rating must be between 0 and 100.")]
         public int Rating { get; set; }
 
-        [Range(1, 100)]
+        [Range(0, 1000, ErrorMessage = "Price must be between $0 and $1000.")]
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }

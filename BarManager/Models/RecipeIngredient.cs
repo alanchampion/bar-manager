@@ -15,7 +15,7 @@ namespace BarManager.Models
         public int IngredientId { get; set; }
 
         [Required]
-        [StringLength(30)]
+        [StringLength(30, ErrorMessage = "Amount can not be longer than 60 characters.")]
         public string Amount { get; set; }
 
         [Required]

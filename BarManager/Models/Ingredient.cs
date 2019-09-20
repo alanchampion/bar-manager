@@ -12,7 +12,7 @@ namespace BarManager.Models
         [Required]
         public string User { get; set; } = "ERROR USER";
 
-        [StringLength(60, MinimumLength = 1)]
+        [StringLength(60, MinimumLength = 1, ErrorMessage = "Name can not be longer than 60 characters.")]
         [Required]
         public string Name { get; set; }
 
