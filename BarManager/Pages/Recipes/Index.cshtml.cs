@@ -18,6 +18,7 @@ namespace BarManager.Pages.Recipes
             _context = context;
         }
 
+        public PaginatedList<Recipe> Recipe { get; set; }
         public string NameSort { get; set; }
         public string DescriptionSort { get; set; }
         public string AddedDateSort { get; set; }
@@ -27,16 +28,26 @@ namespace BarManager.Pages.Recipes
         public string CurrentFilter { get; set; }
         public string CurrentSort { get; set; }
 
-        public IList<Recipe> Recipe { get;set; }
-
-        public async Task OnGetAsync(string sortOrder, string searchString)
+        public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
+            CurrentSort = sortOrder;
+
             NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             DescriptionSort = sortOrder == "Description" ? "description_desc" : "Description";
             AddedDateSort = sortOrder == "AddedDate" ? "addeddate_desc" : "AddedDate";
             UpdateDateSort = sortOrder == "UpdateDate" ? "updatedate_desc" : "UpdateDate";
             RatingSort = sortOrder == "Rating" ? "rating_desc" : "Rating";
             PriceSort = sortOrder == "Price" ? "price_desc" : "Price";
+
+            if(searchString != null)
+            {
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
             CurrentFilter = searchString;
 
             IQueryable<Recipe> recipeIQ = from r in _context.Recipe
@@ -89,7 +100,12 @@ namespace BarManager.Pages.Recipes
                     break;
             }
 
-            Recipe = await recipeIQ.AsNoTracking().ToListAsync();
+            // TODO let this value be changed
+            int pageSize = 10;
+            Recipe = await PaginatedList<Recipe>.CreateAsync(
+                recipeIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
+
+            // Recipe = await recipeIQ.AsNoTracking().ToListAsync();
         }
     }
 }
