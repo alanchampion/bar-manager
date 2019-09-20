@@ -20,16 +20,13 @@ namespace BarManager
 
                 try
                 {
-                    var context = services.
-                        GetRequiredService<BarManagerContext>();
-                    // Don't call in production
-                    context.Database.Migrate();
-                    SeedData.Initialize(services);
+                    var context = services.GetRequiredService<BarManagerContext>();
+                    context.Database.EnsureCreated();
                 }
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred seeding the DB.");
+                    logger.LogError(ex, "An error occurred creating the DB.");
                 }
             }
 

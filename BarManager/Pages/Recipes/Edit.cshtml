@@ -13,15 +13,21 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Recipe.RecipeID" />
+            <div class="form-group">
+                <label asp-for="Recipe.User" class="control-label"></label>
+                <input asp-for="Recipe.User" class="form-control" />
+                <span asp-validation-for="Recipe.User" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Recipe.Name" class="control-label"></label>
                 <input asp-for="Recipe.Name" class="form-control" />
                 <span asp-validation-for="Recipe.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Recipe.UpdatedDate" class="control-label"></label>
-                <input asp-for="Recipe.UpdatedDate" class="form-control" />
-                <span asp-validation-for="Recipe.UpdatedDate" class="text-danger"></span>
+                <label asp-for="Recipe.Instructions" class="control-label"></label>
+                <input asp-for="Recipe.Instructions" class="form-control" />
+                <span asp-validation-for="Recipe.Instructions" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Recipe.Description" class="control-label"></label>
@@ -29,17 +35,27 @@
                 <span asp-validation-for="Recipe.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Recipe.Ingredients" class="control-label"></label>
-                <input asp-for="Recipe.Ingredients" class="form-control" />
-                <span asp-validation-for="Recipe.Ingredients" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Recipe.Rating" class="control-label"></label>
                 <input asp-for="Recipe.Rating" class="form-control" />
                 <span asp-validation-for="Recipe.Rating" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="Recipe.Price" class="control-label"></label>
+                <input asp-for="Recipe.Price" class="form-control" />
+                <span asp-validation-for="Recipe.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Recipe.AddedDate" class="control-label"></label>
+                <input asp-for="Recipe.AddedDate" class="form-control" />
+                <span asp-validation-for="Recipe.AddedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Recipe.UpdatedDate" class="control-label"></label>
+                <input asp-for="Recipe.UpdatedDate" class="form-control" />
+                <span asp-validation-for="Recipe.UpdatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
