@@ -1,0 +1,71 @@
+﻿@page
+@model BarManager.Pages.Recipes.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+
+<form>
+    <p>
+        @*<select asp-for="RecipeGenre" asp-items="Model.Genres">
+            <option value="">All</option>
+        </select>*@
+        Title: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].UpdatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Recipe) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.RecipeID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.RecipeID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.RecipeID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
