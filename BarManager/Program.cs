@@ -21,7 +21,8 @@ namespace BarManager
                 try
                 {
                     var context = services.GetRequiredService<BarManagerContext>();
-                    context.Database.EnsureCreated();
+                    // Using default recipe of old fashioned
+                    DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)
                 {

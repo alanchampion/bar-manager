@@ -10,26 +10,50 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].Name)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
+                    @Html.DisplayNameFor(model => model.Recipe[0].Name)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].Description)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DescriptionSort">
+                    @Html.DisplayNameFor(model => model.Recipe[0].Description)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].AddedDate)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.AddedDateSort">
+                    @Html.DisplayNameFor(model => model.Recipe[0].AddedDate)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].UpdatedDate)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.UpdateDateSort">
+                    @Html.DisplayNameFor(model => model.Recipe[0].UpdatedDate)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].Rating)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.RatingSort">
+                    @Html.DisplayNameFor(model => model.Recipe[0].Rating)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].Price)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.PriceSort">
+                    @Html.DisplayNameFor(model => model.Recipe[0].Price)
+                </a>
             </th>
             <th></th>
         </tr>

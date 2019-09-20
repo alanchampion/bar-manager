@@ -27,7 +27,11 @@ namespace BarManager.Pages.Recipes
                 return NotFound();
             }
 
-            Recipe = await _context.Recipe.FirstOrDefaultAsync(m => m.RecipeID == id);
+            Recipe = await _context.Recipe
+                        .Include(r => r.RecipeIngredients)
+                            .ThenInclude(i => i.Ingredient)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(m => m.RecipeID == id);
 
             if (Recipe == null)
             {

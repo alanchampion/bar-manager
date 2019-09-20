@@ -18,11 +18,78 @@ namespace BarManager.Pages.Recipes
             _context = context;
         }
 
+        public string NameSort { get; set; }
+        public string DescriptionSort { get; set; }
+        public string AddedDateSort { get; set; }
+        public string UpdateDateSort { get; set; }
+        public string RatingSort { get; set; }
+        public string PriceSort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
         public IList<Recipe> Recipe { get;set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            Recipe = await _context.Recipe.ToListAsync();
+            NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            DescriptionSort = sortOrder == "Description" ? "description_desc" : "Description";
+            AddedDateSort = sortOrder == "AddedDate" ? "addeddate_desc" : "AddedDate";
+            UpdateDateSort = sortOrder == "UpdateDate" ? "updatedate_desc" : "UpdateDate";
+            RatingSort = sortOrder == "Rating" ? "rating_desc" : "Rating";
+            PriceSort = sortOrder == "Price" ? "price_desc" : "Price";
+            CurrentFilter = searchString;
+
+            IQueryable<Recipe> recipeIQ = from r in _context.Recipe
+                                            select r;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // If errors with searching occure, add .ToUpper. 
+                recipeIQ = recipeIQ.Where(r => r.Name.Contains(searchString)
+                                       || r.Description.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    recipeIQ = recipeIQ.OrderByDescending(r => r.Name);
+                    break;
+                case "Description":
+                    recipeIQ = recipeIQ.OrderBy(r => r.Description);
+                    break;
+                case "description_desc":
+                    recipeIQ = recipeIQ.OrderByDescending(s => s.Description);
+                    break;
+                case "AddedDate":
+                    recipeIQ = recipeIQ.OrderBy(r => r.AddedDate);
+                    break;
+                case "addeddate_desc":
+                    recipeIQ = recipeIQ.OrderByDescending(s => s.AddedDate);
+                    break;
+                case "UpdateDate":
+                    recipeIQ = recipeIQ.OrderBy(r => r.UpdatedDate);
+                    break;
+                case "updatedate_desc":
+                    recipeIQ = recipeIQ.OrderByDescending(s => s.UpdatedDate);
+                    break;
+                case "Rating":
+                    recipeIQ = recipeIQ.OrderBy(r => r.Rating);
+                    break;
+                case "rating_desc":
+                    recipeIQ = recipeIQ.OrderByDescending(s => s.Rating);
+                    break;
+                case "Price":
+                    recipeIQ = recipeIQ.OrderBy(r => r.Price);
+                    break;
+                case "price_desc":
+                    recipeIQ = recipeIQ.OrderByDescending(s => s.Price);
+                    break;
+                default:
+                    recipeIQ = recipeIQ.OrderBy(s => s.Name);
+                    break;
+            }
+
+            Recipe = await recipeIQ.AsNoTracking().ToListAsync();
         }
     }
 }

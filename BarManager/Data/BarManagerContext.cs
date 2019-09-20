@@ -13,6 +13,8 @@ namespace BarManager.Models
         {
         }
 
-        public DbSet<BarManager.Models.Recipe> Recipe { get; set; }
+        public DbSet<Recipe> Recipe { get; set; }
+        public DbSet<Ingredient> Ingredient { get; set; }
+        public DbSet<RecipeIngredient> RecipeIngredient { get; set; }
     }
 }

@@ -7,17 +7,13 @@
 
 <h1>Delete</h1>
 
+<p class="text-danger">@Model.ErrorMessage</p>
+
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Recipe</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Recipe.User)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Recipe.User)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Recipe.Name)
         </dt>
@@ -25,16 +21,41 @@
             @Html.DisplayFor(model => model.Recipe.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Recipe.Instructions)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Recipe.Instructions)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Recipe.Description)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Recipe.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Recipe.RecipeIngredients)
+        </dt>
+        <dd class="col-sm-10">
+            <table class="d-sm-table">
+                <tr class="d-sm-table-row">
+                    <th class="d-sm-table-cell"></th>
+                    <th class="d-sm-table-cell">Ingredient</th>
+                    <th class="d-sm-table-cell">Required</th>
+                </tr>
+                @foreach (var item in Model.Recipe.RecipeIngredients)
+                {
+                    <tr class="d-sm-table-row">
+                        <td class="d-sm-table-cell">
+                        </td>
+                        <td class="d-sm-table-cell">
+                            @Html.DisplayFor(modelItem => item.Amount) - @Html.DisplayFor(modelItem => item.Ingredient.Name)
+                        </td>
+                        <td class="d-sm-table-cell">
+                            @Html.DisplayFor(modelItem => item.Required)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Recipe.Instructions)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Recipe.Instructions)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Recipe.Rating)

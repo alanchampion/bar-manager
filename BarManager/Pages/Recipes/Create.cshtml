@@ -14,11 +14,6 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Recipe.User" class="control-label"></label>
-                <input asp-for="Recipe.User" class="form-control" />
-                <span asp-validation-for="Recipe.User" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Recipe.Name" class="control-label"></label>
                 <input asp-for="Recipe.Name" class="form-control" />
                 <span asp-validation-for="Recipe.Name" class="text-danger"></span>
@@ -42,16 +37,6 @@
                 <label asp-for="Recipe.Price" class="control-label"></label>
                 <input asp-for="Recipe.Price" class="form-control" />
                 <span asp-validation-for="Recipe.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Recipe.AddedDate" class="control-label"></label>
-                <input asp-for="Recipe.AddedDate" class="form-control" />
-                <span asp-validation-for="Recipe.AddedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Recipe.UpdatedDate" class="control-label"></label>
-                <input asp-for="Recipe.UpdatedDate" class="form-control" />
-                <span asp-validation-for="Recipe.UpdatedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

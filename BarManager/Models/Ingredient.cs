@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BarManager.Models
@@ -7,13 +8,22 @@ namespace BarManager.Models
     {
         public int IngredientID { get; set; }
 
+        // TODO use logged in user
         [Required]
-        public string User { get; set; }
+        public string User { get; set; } = "ERROR USER";
 
         [StringLength(60, MinimumLength = 1)]
         [Required]
         public string Name { get; set; }
 
-        public ICollection<RecipeIngredient> Recipes { get; set; }
+        [Required]
+        public bool Owned { get; set; }
+
+        [Display(Name = "Purchase Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime PurchaseDate { get; set; } = DateTime.MinValue;
+
+        public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
     }
 }

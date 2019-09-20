@@ -29,7 +29,7 @@ namespace BarManager.Pages.Recipes
                 return NotFound();
             }
 
-            Recipe = await _context.Recipe.FirstOrDefaultAsync(m => m.RecipeID == id);
+            Recipe = await _context.Recipe.FindAsync(id);
 
             if (Recipe == null)
             {
@@ -38,32 +38,28 @@ namespace BarManager.Pages.Recipes
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(Recipe).State = EntityState.Modified;
+            var recipeToUpdate = await _context.Recipe.FindAsync(id);
+            recipeToUpdate.UpdatedDate = DateTime.Now;
 
-            try
+            Console.WriteLine(recipeToUpdate);
+
+            if (await TryUpdateModelAsync<Recipe>(
+                recipeToUpdate,
+                "recipe",
+                r => r.Name, r => r.Instructions, r => r.Description, r => r.Rating, r => r.Price))
             {
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RecipeExists(Recipe.RecipeID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return RedirectToPage("./Index");
             }
 
-            return RedirectToPage("./Index");
+            return Page();
         }
 
         private bool RecipeExists(int id)

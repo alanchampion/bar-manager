@@ -20,20 +20,31 @@ namespace BarManager.Pages.Recipes
 
         [BindProperty]
         public Recipe Recipe { get; set; }
+        public string ErrorMessage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            Recipe = await _context.Recipe.FirstOrDefaultAsync(m => m.RecipeID == id);
+            Recipe = await _context.Recipe
+                        .Include(r => r.RecipeIngredients)
+                            .ThenInclude(i => i.Ingredient)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(m => m.RecipeID == id);
 
             if (Recipe == null)
             {
                 return NotFound();
             }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ErrorMessage = "Delete failed. Try again";
+            }
+
             return Page();
         }
 
@@ -44,15 +55,27 @@ namespace BarManager.Pages.Recipes
                 return NotFound();
             }
 
-            Recipe = await _context.Recipe.FindAsync(id);
+            var recipe = await _context.Recipe
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(m => m.RecipeID == id);
 
-            if (Recipe != null)
+            if (recipe == null)
             {
-                _context.Recipe.Remove(Recipe);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
 
-            return RedirectToPage("./Index");
+            try
+            {
+                _context.Recipe.Remove(recipe);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction("./Delete",
+                                     new { id, saveChangesError = true });
+            }
         }
     }
 }

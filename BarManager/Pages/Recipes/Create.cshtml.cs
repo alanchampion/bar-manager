@@ -33,8 +33,23 @@ namespace BarManager.Pages.Recipes
                 return Page();
             }
 
-            _context.Recipe.Add(Recipe);
-            await _context.SaveChangesAsync();
+            // TODO use logged in user
+            var emptyRecipe = new Recipe
+            {
+                User = "achampion",
+                UpdatedDate = DateTime.Now,
+                AddedDate = DateTime.Now
+            };
+
+            if (await TryUpdateModelAsync<Recipe>(
+                emptyRecipe,
+                "recipe",   // Prefix for form value.
+                r => r.Name, r => r.Instructions, r => r.Description, r => r.Rating, r => r.Price))
+            {
+                _context.Recipe.Add(emptyRecipe);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
+            }
 
             return RedirectToPage("./Index");
         }
