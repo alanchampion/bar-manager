@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
+using BarManager.Hubs;
 
 namespace BarManager
 {
@@ -36,6 +37,8 @@ namespace BarManager
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddSignalR();
+
             services.AddDbContext<BarManagerContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("BarManagerContext")));
         }
@@ -57,6 +60,10 @@ namespace BarManager
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<IngredientHub>("/ingredientHub");
+            });
 
             app.UseMvc();
         }

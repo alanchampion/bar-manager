@@ -45,5 +45,17 @@ namespace BarManager.Models
         [Display(Name = "Ingredients")]
         [DisplayFormat(NullDisplayText = "No Ingredients")]
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+
+        public override string ToString()
+        {
+            return "User: " + User + "\n" +
+                "Name: " + Name + "\n" +
+                "Instructions: " + Instructions + "\n" +
+                "Description: " + Description + "\n" +
+                "Rating: " + Rating + "\n" +
+                "Price: " + Price + "\n" +
+                "AddedDate: " + AddedDate + "\n" + 
+                "UpdatedDate: " + UpdatedDate;
+        }
     }
 }

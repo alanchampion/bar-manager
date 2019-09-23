@@ -25,5 +25,13 @@ namespace BarManager.Models
         public DateTime PurchaseDate { get; set; } = DateTime.MinValue;
 
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+
+        public override string ToString()
+        {
+            return "User: " + User + "\n" +
+                "Name: " + Name + "\n" +
+                "Owned: " + Owned + "\n" +
+                "Purchase Date: " + PurchaseDate;
+        }
     }
 }

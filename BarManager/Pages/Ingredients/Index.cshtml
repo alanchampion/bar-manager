@@ -26,30 +26,25 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Ingredients) {
-        <tr>
-            <td>
-                <a asp-page="./Details" asp-route-id="@item.IngredientID">@Html.DisplayFor(modelItem => item.Name)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PurchaseDate)
-            </td>
-            <td>
-                <form method="post">
-                    <input type="hidden" asp-for="@item.IngredientID" />
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="@item.Owned" /> @Html.DisplayNameFor(modelItem => item.Owned)
-                        </label>
-                    </div>
-                </form>
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.IngredientID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.IngredientID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.IngredientID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Ingredients)
+        {
+            <tr>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.IngredientID">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseDate)
+                </td>
+                <td>
+                    <input class="form-check-inline ownedCheck" id="@item.IngredientID" asp-for="@item.Owned" />
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.IngredientID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.IngredientID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.IngredientID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<script src="~/lib/signalr/dist/browser/signalr.min.js"></script>

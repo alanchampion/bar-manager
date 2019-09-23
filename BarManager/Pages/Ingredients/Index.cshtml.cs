@@ -6,16 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
+using Microsoft.Extensions.Logging;
 
 namespace BarManager.Pages.Ingredients
 {
     public class IndexModel : PageModel
     {
         private readonly BarManager.Models.BarManagerContext _context;
+        private readonly ILogger<IndexModel> _logger;
+        private readonly Util _util;
 
-        public IndexModel(BarManager.Models.BarManagerContext context)
+        public IndexModel(BarManager.Models.BarManagerContext context, ILogger<IndexModel> logger)
         {
             _context = context;
+            _logger = logger;
+            _util = new Util(context, logger);
         }
 
         public IList<Ingredient> Ingredients { get;set; }
@@ -41,7 +46,7 @@ namespace BarManager.Pages.Ingredients
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!IngredientExists(item.IngredientID))
+                if (!_util.IngredientExists(item.IngredientID))
                 {
                     return NotFound();
                 }
@@ -52,11 +57,6 @@ namespace BarManager.Pages.Ingredients
             }
 
             return RedirectToPage("./Index");
-        }
-
-        private bool IngredientExists(int id)
-        {
-            return _context.Ingredient.Any(e => e.IngredientID == id);
         }
     }
 }
