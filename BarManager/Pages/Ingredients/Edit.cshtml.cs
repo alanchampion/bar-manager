@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
 
-namespace BarManager.Pages.Recipes
+namespace BarManager.Pages.Ingredients
 {
     public class EditModel : PageModel
     {
@@ -20,7 +20,7 @@ namespace BarManager.Pages.Recipes
         }
 
         [BindProperty]
-        public Recipe Recipe { get; set; }
+        public Ingredient Ingredient { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,42 +29,46 @@ namespace BarManager.Pages.Recipes
                 return NotFound();
             }
 
-            Recipe = await _context.Recipe.FindAsync(id);
+            Ingredient = await _context.Ingredient.FirstOrDefaultAsync(m => m.IngredientID == id);
 
-            if (Recipe == null)
+            if (Ingredient == null)
             {
                 return NotFound();
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var recipeToUpdate = await _context.Recipe.FindAsync(id);
-            recipeToUpdate.UpdatedDate = DateTime.Now;
+            _context.Attach(Ingredient).State = EntityState.Modified;
 
-            // Console.WriteLine(recipeToUpdate);
-
-            if (await TryUpdateModelAsync<Recipe>(
-                recipeToUpdate,
-                "recipe",
-                r => r.Name, r => r.Instructions, r => r.Description, r => r.Rating, r => r.Price))
+            try
             {
                 await _context.SaveChangesAsync();
-                return RedirectToPage("./Index");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!IngredientExists(Ingredient.IngredientID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            return Page();
+            return RedirectToPage("./Index");
         }
 
-        private bool RecipeExists(int id)
+        private bool IngredientExists(int id)
         {
-            return _context.Recipe.Any(e => e.RecipeID == id);
+            return _context.Ingredient.Any(e => e.IngredientID == id);
         }
     }
 }
