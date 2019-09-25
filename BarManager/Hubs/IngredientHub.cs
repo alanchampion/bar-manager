@@ -17,7 +17,7 @@ namespace BarManager.Hubs
         {
             _context = context;
             _logger = logger;
-            _util = new Util(context, logger);
+            _util = new Util(logger);
         }
 
         public async Task UpdateIngredientOwned(string user, string stringId, string stringOwned)

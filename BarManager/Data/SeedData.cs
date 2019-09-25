@@ -7,7 +7,19 @@ namespace BarManager.Models
     {
         public static void Initialize(BarManagerContext context)
         {
-            context.Database.EnsureCreated();
+            try
+            {
+                var created = context.Database.EnsureCreated();
+                if(!created)
+                {
+                    Console.WriteLine("Not created");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
 
             // Look for any students.
             if (context.Recipe.Any() || context.Ingredient.Any())

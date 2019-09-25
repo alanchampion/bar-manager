@@ -15,12 +15,14 @@ namespace BarManager.Pages.Ingredients
         private readonly BarManager.Models.BarManagerContext _context;
         private readonly ILogger<IndexModel> _logger;
         private readonly Util _util;
+        private readonly DbUtil _dbUtil;
 
         public IndexModel(BarManager.Models.BarManagerContext context, ILogger<IndexModel> logger)
         {
             _context = context;
             _logger = logger;
-            _util = new Util(context, logger);
+            _util = new Util(logger);
+            _dbUtil = new DbUtil(context, logger);
         }
 
         public IList<Ingredient> Ingredients { get;set; }
@@ -46,7 +48,7 @@ namespace BarManager.Pages.Ingredients
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_util.IngredientExists(item.IngredientID))
+                if (!_dbUtil.IngredientExists("achampion", item.IngredientID))
                 {
                     return NotFound();
                 }

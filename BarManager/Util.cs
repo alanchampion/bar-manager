@@ -1,25 +1,62 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace BarManager
 {
     public class Util
     {
-        private readonly BarManager.Models.BarManagerContext _context;
         private readonly ILogger _logger;
 
-        public Util(BarManager.Models.BarManagerContext context, ILogger logger)
+        public Util(ILogger logger)
         {
-            _context = context;
             _logger = logger;
         }
 
-        public bool IngredientExists(int id)
+        public static bool isLocalEnv()
         {
-            return _context.Ingredient.Any(e => e.IngredientID == id);
+            // Console.WriteLine(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Local"))
+                return true;
+            else
+                return false;
+        }
+
+        public static string GetFromEnvironmentVariables(string key)
+        {
+            var appConfig = ConfigurationManager.AppSettings;
+            return appConfig[key];
+            // return Environment.GetEnvironmentVariable(key);
+        }
+
+        public string getDbString(IConfiguration config)
+        {
+            if (isLocalEnv())
+            {
+                // _logger.LogError("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+                _logger.LogInformation("Db Connection string: " + config.GetConnectionString("BarManagerContext"));
+                return config.GetConnectionString("BarManagerContext");
+            }
+            else
+            {
+                string dbname = config.GetValue<string>("plugins:rds:env:RDS_DB_NAME");
+
+                if (string.IsNullOrEmpty(dbname)) return null;
+
+                string username = config.GetValue<string>("plugins:rds:env:RDS_USERNAME");
+                string password = config.GetValue<string>("plugins:rds:env:RDS_PASSWORD");
+                string hostname = config.GetValue<string>("plugins:rds:env:RDS_HOSTNAME");
+                string port = config.GetValue<string>("plugins:rds:env:RDS_PORT");
+                string dbConnect =  "Server=" + hostname + ";Database=" + dbname + ";User=" + username + ";Password=" + password + ";MultipleActiveResultSets=true;";
+                
+                _logger.LogInformation("Db Connection string: " + dbConnect);
+                return dbConnect;
+            }
         }
     }
 }
