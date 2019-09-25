@@ -29,16 +29,13 @@ namespace BarManager
 
         public static string GetFromEnvironmentVariables(string key)
         {
-            var appConfig = ConfigurationManager.AppSettings;
-            return appConfig[key];
-            // return Environment.GetEnvironmentVariable(key);
+            return Environment.GetEnvironmentVariable(key);
         }
 
         public string getDbString(IConfiguration config)
         {
             if (isLocalEnv())
             {
-                // _logger.LogError("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
                 _logger.LogInformation("Db Connection string: " + config.GetConnectionString("BarManagerContext"));
                 return config.GetConnectionString("BarManagerContext");
             }
