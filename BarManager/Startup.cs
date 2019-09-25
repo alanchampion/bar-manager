@@ -12,17 +12,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
 using BarManager.Hubs;
+using Microsoft.Extensions.Logging;
 
 namespace BarManager
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
+            _util = new Util(logger);
         }
 
         public IConfiguration Configuration { get; }
+        private Util _util;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -40,7 +43,7 @@ namespace BarManager
             services.AddSignalR();
 
             services.AddDbContext<BarManagerContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("BarManagerContext")));
+                options.UseSqlServer(_util.getDbString(Configuration)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,9 +55,11 @@ namespace BarManager
             }
             else
             {
+                // TODO undo this for production
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+                // app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();

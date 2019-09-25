@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using BarManager.Models;
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace BarManager
 {
@@ -36,6 +37,10 @@ namespace BarManager
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    config.AddJsonFile(@"C:\Program Files\Amazon\ElasticBeanstalk\config\containerconfiguration", optional: true, reloadOnChange: true);
+                })
                 .UseStartup<Startup>();
     }
 }

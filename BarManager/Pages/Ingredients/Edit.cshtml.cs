@@ -16,12 +16,14 @@ namespace BarManager.Pages.Ingredients
         private readonly BarManager.Models.BarManagerContext _context;
         private readonly ILogger<EditModel> _logger;
         private Util _util;
+        private DbUtil _dbUtil;
 
         public EditModel(BarManager.Models.BarManagerContext context, ILogger<EditModel> logger)
         {
             _context = context;
             _logger = logger;
-            _util = new Util(context, logger);
+            _util = new Util(logger);
+            _dbUtil = new DbUtil(context, logger);
         }
 
         [BindProperty]
@@ -58,7 +60,7 @@ namespace BarManager.Pages.Ingredients
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_util.IngredientExists(Ingredient.IngredientID))
+                if (!_dbUtil.IngredientExists("achampion", Ingredient.IngredientID))
                 {
                     return NotFound();
                 }

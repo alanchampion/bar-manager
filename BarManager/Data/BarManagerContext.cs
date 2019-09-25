@@ -8,10 +8,7 @@ namespace BarManager.Models
 {
     public class BarManagerContext : DbContext
     {
-        public BarManagerContext (DbContextOptions<BarManagerContext> options)
-            : base(options)
-        {
-        }
+        public BarManagerContext (DbContextOptions<BarManagerContext> options) : base(options){ }
 
         public DbSet<Recipe> Recipe { get; set; }
         public DbSet<Ingredient> Ingredient { get; set; }
