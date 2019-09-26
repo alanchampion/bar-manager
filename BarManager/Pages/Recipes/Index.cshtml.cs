@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BarManager.Pages.Recipes
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly BarManager.Models.BarManagerContext _context;

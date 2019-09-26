@@ -14,8 +14,6 @@ using BarManager.Models;
 using BarManager.Hubs;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BarManager
@@ -49,7 +47,7 @@ namespace BarManager
                     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })*/
-            services.AddIdentity<IdentityUser, IdentityRole>();
+            // services.AddIdentity<IdentityUser, IdentityRole>();
             services.AddAuthentication(options => 
                 {
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -65,11 +63,11 @@ namespace BarManager
                 });
 
             services.AddMvc()
-                 .AddRazorPagesOptions(options =>
+                 /*.AddRazorPagesOptions(options =>
                  {
                      options.Conventions.AuthorizeAreaPage("Identity", "/Recipes");
                      options.Conventions.AllowAnonymousToPage("/");
-                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                 })*/.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSignalR();
         }
