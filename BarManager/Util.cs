@@ -21,7 +21,8 @@ namespace BarManager
         public static bool isLocalEnv()
         {
             // Console.WriteLine(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Local"))
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (!String.IsNullOrEmpty(env) && env.Equals("Local"))
                 return true;
             else
                 return false;

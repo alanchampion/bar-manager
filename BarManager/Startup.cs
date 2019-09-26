@@ -42,32 +42,25 @@ namespace BarManager
             services.AddDbContext<BarManagerContext>(options =>
                 options.UseSqlServer(_util.getDbString(_config)));
 
-            /*services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                })*/
-            // services.AddIdentity<IdentityUser, IdentityRole>();
             services.AddAuthentication(options => 
                 {
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-                }).AddCookie(/*options => {
-                    options.LoginPath = "/Account/Login";
-                    options.LogoutPath = "/Account/Logout";
-                    // options.AccessDeniedPath = "/Login";
-                }*/).AddGoogle(options =>
+                }).AddCookie().AddGoogle(options =>
                 {
-                    options.ClientId = _config["LocalClientId"];
-                    options.ClientSecret = _config["LocalClientSecret"];
+                    if(Util.isLocalEnv())
+                    {
+                        options.ClientId = _config["LocalClientId"];
+                        options.ClientSecret = _config["LocalClientSecret"];
+                    } else
+                    {
+                        options.ClientId = _config["ClientId"];
+                        options.ClientSecret = _config["ClientSecret"];
+                    }
+                    
                 });
 
-            services.AddMvc()
-                 /*.AddRazorPagesOptions(options =>
-                 {
-                     options.Conventions.AuthorizeAreaPage("Identity", "/Recipes");
-                     options.Conventions.AllowAnonymousToPage("/");
-                 })*/.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSignalR();
         }
