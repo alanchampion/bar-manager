@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BarManager.Pages
+namespace BarManager.Pages.Account
 {
-    public class PrivacyModel : PageModel
+    [Authorize]
+    public class LoginModel : PageModel
     {
-        public void OnGet()
+        public RedirectToPageResult OnGet()
         {
+            return new RedirectToPageResult("/Index");
         }
     }
 }

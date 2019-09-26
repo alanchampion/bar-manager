@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BarManager.Pages
+namespace BarManager.Pages.Account
 {
-    public class IndexModel : PageModel
+    public class LogoutModel : PageModel
     {
-        public void OnGet()
+        public async Task<IActionResult> OnGet()
         {
-
+            await HttpContext.SignOutAsync();
+            return new RedirectToPageResult("/Index");
         }
     }
 }
