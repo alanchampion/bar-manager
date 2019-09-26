@@ -55,9 +55,10 @@ namespace BarManager.Pages.Recipes
 
             if (!String.IsNullOrEmpty(searchString))
             {
+                // TODO use logged in user
                 // If errors with searching occure, add .ToUpper. 
-                recipeIQ = recipeIQ.Where(r => r.Name.Contains(searchString)
-                                       || r.Description.Contains(searchString));
+                recipeIQ = recipeIQ.Where(r => r.User == "achampion" && r.Name.Contains(searchString)
+                                       || r.User == "achampion" && r.Description.Contains(searchString));
             }
 
             switch (sortOrder)

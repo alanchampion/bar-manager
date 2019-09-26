@@ -29,7 +29,8 @@ namespace BarManager.Pages.Recipes
                 return NotFound();
             }
 
-            Recipe = await _context.Recipe.FindAsync(id);
+            // TODO use logged in user
+            Recipe = await _context.Recipe.FirstOrDefaultAsync(r => r.RecipeID == id && r.User == "achampion");
 
             if (Recipe == null)
             {
@@ -45,7 +46,9 @@ namespace BarManager.Pages.Recipes
                 return Page();
             }
 
-            var recipeToUpdate = await _context.Recipe.FindAsync(id);
+            // TODO use logged in user
+            // TODO what happens if not found? 
+            var recipeToUpdate = await _context.Recipe.FirstOrDefaultAsync(r => r.RecipeID == id && r.User == "achampion");
             recipeToUpdate.UpdatedDate = DateTime.Now;
 
             // Console.WriteLine(recipeToUpdate);
@@ -60,11 +63,6 @@ namespace BarManager.Pages.Recipes
             }
 
             return Page();
-        }
-
-        private bool RecipeExists(int id)
-        {
-            return _context.Recipe.Any(e => e.RecipeID == id);
         }
     }
 }

@@ -29,11 +29,12 @@ namespace BarManager.Pages.Recipes
                 return NotFound();
             }
 
+            // TODO use logged in user
             Recipe = await _context.Recipe
                         .Include(r => r.RecipeIngredients)
                             .ThenInclude(i => i.Ingredient)
                         .AsNoTracking()
-                        .FirstOrDefaultAsync(m => m.RecipeID == id);
+                        .FirstOrDefaultAsync(m => m.RecipeID == id && m.User == "achampion");
 
             if (Recipe == null)
             {
@@ -55,9 +56,10 @@ namespace BarManager.Pages.Recipes
                 return NotFound();
             }
 
+            // TODO use logged in user
             var recipe = await _context.Recipe
                             .AsNoTracking()
-                            .FirstOrDefaultAsync(m => m.RecipeID == id);
+                            .FirstOrDefaultAsync(m => m.RecipeID == id && m.User == "achampion");
 
             if (recipe == null)
             {
