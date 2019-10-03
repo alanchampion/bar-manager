@@ -69,3 +69,19 @@ body {
 /*.navbar {
     background-color: #DCD0FF;
 }*/
+
+.empty_star {
+    background-image: url(img/empty_star.png);
+    background-size: .25rem;
+    height: .25rem;
+    width: .25rem;
+    background-position: center;
+}
+
+.yellow_star {
+    background-image: url(img/yellow_star.png);
+    background-size: .25rem;
+    height: .25rem;
+    width: .25rem;
+    background-position: center;
+}

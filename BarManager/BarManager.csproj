@@ -6,12 +6,22 @@
     <UserSecretsId>51e88a88-cf4a-46e8-84f5-bc20a66384e3</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20190926214647_IngredientKey.cs" />
+    <Compile Remove="Migrations\20190926214647_IngredientKey.Designer.cs" />
+    <Compile Remove="Migrations\20190927174414_IngredientGenerateId3.cs" />
+    <Compile Remove="Migrations\20190927174414_IngredientGenerateId3.Designer.cs" />
+    <Compile Remove="Migrations\20190927215424_IngredientGenerateId3.cs" />
+    <Compile Remove="Migrations\20190927215424_IngredientGenerateId3.Designer.cs" />
+    <Compile Remove="Migrations\20190930162324_AddedFavorite.cs" />
+    <Compile Remove="Migrations\20190930162324_AddedFavorite.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
   </ItemGroup>
 

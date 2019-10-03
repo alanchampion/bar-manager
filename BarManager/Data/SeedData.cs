@@ -11,10 +11,6 @@ namespace BarManager.Models
             try
             {
                 var created = context.Database.EnsureCreated();
-                if(!created)
-                {
-                    Console.WriteLine("Not created");
-                }
             }
             catch (Exception e)
             {
@@ -28,14 +24,14 @@ namespace BarManager.Models
                 return;   // DB has been seeded
             }
 
-            // TODO change user to logged in user
             var recipe = new Recipe
             {
                 User = "achampion",
                 Name = "Old Fashioned",
+                Favorite = true,
                 Instructions = "Muddle sugar cube with bitters. Add ice. Pour whiskey over top and stir. Garnish with orange peel and maraschino cherry.",
                 Description = "A classic whiskey cocktail",
-                Rating = 90,
+                Rating = 4.5,
                 Price = 6.00M,
                 AddedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now
@@ -45,14 +41,13 @@ namespace BarManager.Models
 
             context.SaveChanges();
 
-            // TODO change user to logged in user
             var ingredients = new Ingredient[]
             {
-                new Ingredient{User = "achampion", Name = "Rye Whiskey", Owned = true, PurchaseDate = DateTime.Now},
-                new Ingredient{User = "achampion", Name = "Angostora Bitters", Owned = true, PurchaseDate = DateTime.Now},
-                new Ingredient{User = "achampion", Name = "Sugar Cube", Owned = true, PurchaseDate = DateTime.Now},
-                new Ingredient{User = "achampion", Name = "Orange Peel", Owned = true, PurchaseDate = DateTime.Now},
-                new Ingredient{User = "achampion", Name = "Maraschino Cherry", Owned = true, PurchaseDate = DateTime.Now}
+                new Ingredient{User = "achampion", Name = "Rye Whiskey", Favorite = true, Owned = true, PurchaseDate = DateTime.Now},
+                new Ingredient{User = "achampion", Name = "Angostora Bitters", Favorite = true, Owned = true, PurchaseDate = DateTime.Now},
+                new Ingredient{User = "achampion", Name = "Sugar Cube", Favorite = false, Owned = true, PurchaseDate = DateTime.Now},
+                new Ingredient{User = "achampion", Name = "Orange Peel", Favorite = false, Owned = true, PurchaseDate = DateTime.Now},
+                new Ingredient{User = "achampion", Name = "Maraschino Cherry", Favorite = true, Owned = true, PurchaseDate = DateTime.Now}
             };
 
             var ingredientIds = new int[ingredients.Length];

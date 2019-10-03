@@ -6,35 +6,40 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BarManager.Pages.Recipes
 {
+    [Authorize]
     public class DeleteModel : PageModel
     {
         private readonly BarManager.Models.BarManagerContext _context;
 
-        public DeleteModel(BarManager.Models.BarManagerContext context)
+        public DeleteModel(IHttpContextAccessor httpContextAccessor, BarManager.Models.BarManagerContext context)
         {
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context = context;
         }
 
         [BindProperty]
         public Recipe Recipe { get; set; }
         public string ErrorMessage { get; set; }
+        private string _userId { get; }
 
-        public async Task<IActionResult> OnGetAsync(int? id, bool? saveChangesError = false)
+        public async Task<IActionResult> OnGetAsync(string name, bool? saveChangesError = false)
         {
-            if (id == null)
+            if (name == null)
             {
                 return NotFound();
             }
 
-            // TODO use logged in user
             Recipe = await _context.Recipe
                         .Include(r => r.RecipeIngredients)
                             .ThenInclude(i => i.Ingredient)
                         .AsNoTracking()
-                        .FirstOrDefaultAsync(m => m.RecipeID == id && m.User == "achampion");
+                        .FirstOrDefaultAsync(m => m.Name == name && m.User == _userId);
 
             if (Recipe == null)
             {
@@ -56,10 +61,9 @@ namespace BarManager.Pages.Recipes
                 return NotFound();
             }
 
-            // TODO use logged in user
             var recipe = await _context.Recipe
                             .AsNoTracking()
-                            .FirstOrDefaultAsync(m => m.RecipeID == id && m.User == "achampion");
+                            .FirstOrDefaultAsync(m => m.RecipeID == id && m.User == _userId);
 
             if (recipe == null)
             {

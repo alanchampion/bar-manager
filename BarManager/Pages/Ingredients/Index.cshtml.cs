@@ -7,9 +7,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using BarManager.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BarManager.Pages.Ingredients
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly BarManager.Models.BarManagerContext _context;
@@ -17,8 +23,9 @@ namespace BarManager.Pages.Ingredients
         private readonly Util _util;
         private readonly DbUtil _dbUtil;
 
-        public IndexModel(BarManager.Models.BarManagerContext context, ILogger<IndexModel> logger)
+        public IndexModel(IHttpContextAccessor httpContextAccessor, BarManager.Models.BarManagerContext context, ILogger<IndexModel> logger)
         {
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context = context;
             _logger = logger;
             _util = new Util(logger);
@@ -27,10 +34,14 @@ namespace BarManager.Pages.Ingredients
 
         public IList<Ingredient> Ingredients { get;set; }
         public Ingredient item { get; set; }
+        private string _userId { get; }
 
         public async Task OnGetAsync()
         {
-            Ingredients = await _context.Ingredient.ToListAsync();
+            Ingredients = (from r in _context.Ingredient
+                           where r.User == _userId
+                           orderby r.Name
+                           select r).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -48,7 +59,7 @@ namespace BarManager.Pages.Ingredients
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_dbUtil.IngredientExists("achampion", item.IngredientID))
+                if (!_dbUtil.IngredientExists(_userId, item.IngredientID))
                 {
                     return NotFound();
                 }

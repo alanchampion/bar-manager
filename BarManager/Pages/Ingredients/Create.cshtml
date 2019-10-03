@@ -25,8 +25,18 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Ingredient.Favorite" /> @Html.DisplayNameFor(model => model.Ingredient.Favorite)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
                     <input class="form-check-input" asp-for="Ingredient.Owned" /> @Html.DisplayNameFor(model => model.Ingredient.Owned)
                 </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ingredient.Notes" class="control-label"></label>
+                <textarea asp-for="Ingredient.Notes" class="form-control"></textarea>
+                <span asp-validation-for="Ingredient.Notes" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

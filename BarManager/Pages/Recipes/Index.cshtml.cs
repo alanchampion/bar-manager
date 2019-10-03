@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace BarManager.Pages.Recipes
 {
@@ -15,14 +17,18 @@ namespace BarManager.Pages.Recipes
     {
         private readonly BarManager.Models.BarManagerContext _context;
 
-        public IndexModel(BarManager.Models.BarManagerContext context)
+        public IndexModel(IHttpContextAccessor httpContextAccessor, BarManager.Models.BarManagerContext context)
         {
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Console.WriteLine("User Id for " + httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name) + ": " + _userId);
             _context = context;
         }
 
         public PaginatedList<Recipe> Recipe { get; set; }
+        private string _userId { get; }
         public string NameSort { get; set; }
         public string DescriptionSort { get; set; }
+        public string FavoriteSort { get; set; }
         public string AddedDateSort { get; set; }
         public string UpdateDateSort { get; set; }
         public string RatingSort { get; set; }
@@ -36,6 +42,7 @@ namespace BarManager.Pages.Recipes
 
             NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             DescriptionSort = sortOrder == "Description" ? "description_desc" : "Description";
+            FavoriteSort = sortOrder == "Favorite" ? "favorite_desc" : "Favorite";
             AddedDateSort = sortOrder == "AddedDate" ? "addeddate_desc" : "AddedDate";
             UpdateDateSort = sortOrder == "UpdateDate" ? "updatedate_desc" : "UpdateDate";
             RatingSort = sortOrder == "Rating" ? "rating_desc" : "Rating";
@@ -53,14 +60,13 @@ namespace BarManager.Pages.Recipes
             CurrentFilter = searchString;
 
             IQueryable<Recipe> recipeIQ = from r in _context.Recipe
-                                            select r;
-
+                                          where r.User == _userId
+                                          orderby r.Name
+                                          select r;
             if (!String.IsNullOrEmpty(searchString))
             {
-                // TODO use logged in user
                 // If errors with searching occure, add .ToUpper. 
-                recipeIQ = recipeIQ.Where(r => r.User == "achampion" && r.Name.Contains(searchString)
-                                       || r.User == "achampion" && r.Description.Contains(searchString));
+                recipeIQ = recipeIQ.Where(r => r.Name.Contains(searchString) || r.Description.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -73,6 +79,12 @@ namespace BarManager.Pages.Recipes
                     break;
                 case "description_desc":
                     recipeIQ = recipeIQ.OrderByDescending(s => s.Description);
+                    break;
+                case "Favorite":
+                    recipeIQ = recipeIQ.OrderBy(r => r.Favorite);
+                    break;
+                case "favorite_desc":
+                    recipeIQ = recipeIQ.OrderByDescending(s => s.Favorite);
                     break;
                 case "AddedDate":
                     recipeIQ = recipeIQ.OrderBy(r => r.AddedDate);

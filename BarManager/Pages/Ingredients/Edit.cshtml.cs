@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BarManager.Pages.Ingredients
 {
@@ -18,8 +20,9 @@ namespace BarManager.Pages.Ingredients
         private Util _util;
         private DbUtil _dbUtil;
 
-        public EditModel(BarManager.Models.BarManagerContext context, ILogger<EditModel> logger)
+        public EditModel(IHttpContextAccessor httpContextAccessor, BarManager.Models.BarManagerContext context, ILogger<EditModel> logger)
         {
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context = context;
             _logger = logger;
             _util = new Util(logger);
@@ -28,15 +31,16 @@ namespace BarManager.Pages.Ingredients
 
         [BindProperty]
         public Ingredient Ingredient { get; set; }
+        private string _userId { get; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(string name)
         {
-            if (id == null)
+            if (name == null)
             {
                 return NotFound();
             }
 
-            Ingredient = await _context.Ingredient.FirstOrDefaultAsync(m => m.IngredientID == id);
+            Ingredient = await _context.Ingredient.FirstOrDefaultAsync(m => m.Name == name && m.User == _userId);
 
             if (Ingredient == null)
             {
@@ -45,32 +49,27 @@ namespace BarManager.Pages.Ingredients
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(Ingredient).State = EntityState.Modified;
+            var ingredientToUpdate = await _context.Ingredient.FirstOrDefaultAsync(i => i.IngredientID == id && i.User == _userId);
 
-            try
+            Console.WriteLine(ingredientToUpdate);
+
+            if (await TryUpdateModelAsync<Ingredient>(
+                ingredientToUpdate,
+                "ingredient",
+                i => i.Name, i => i.Favorite, i => i.PurchaseDate, i => i.Owned, i => i.Notes))
             {
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_dbUtil.IngredientExists("achampion", Ingredient.IngredientID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return RedirectToPage("./Index");
             }
 
-            return RedirectToPage("./Index");
+            return Page();
         }
     }
 }

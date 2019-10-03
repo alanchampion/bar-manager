@@ -23,6 +23,11 @@
                 <input asp-for="Recipe.Description" class="form-control" />
                 <span asp-validation-for="Recipe.Description" class="text-danger"></span>
             </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Recipe.Favorite" /> @Html.DisplayNameFor(model => model.Recipe.Favorite)
+                </label>
+            </div>
             <div class="form-group">
                 <label asp-for="Recipe.RecipeIngredients" class="control-label"></label>
                 <input asp-for="Recipe.RecipeIngredients" class="form-control" />
@@ -35,7 +40,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Recipe.Rating" class="control-label"></label>
-                <input asp-for="Recipe.Rating" class="form-control" />
+                <!-- <input asp-for="Recipe.Rating" class="form-control" /> -->
+                <input asp-for="Recipe.Rating" id="rating" class="kv-ltr-theme-svg-star rating-loading rating-enabled" value="0" dir="ltr" data-size="xs" />
                 <span asp-validation-for="Recipe.Rating" class="text-danger"></span>
             </div>
             <div class="form-group">

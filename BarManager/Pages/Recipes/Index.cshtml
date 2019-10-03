@@ -38,6 +38,12 @@
                 </a>
             </th>
             <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.FavoriteSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.Recipe[0].Favorite)
+                </a>
+            </th>
+            <th>
                 <a asp-page="./Index" asp-route-sortOrder="@Model.AddedDateSort"
                    asp-route-currentFilter="@Model.CurrentFilter">
                     @Html.DisplayNameFor(model => model.Recipe[0].AddedDate)
@@ -69,10 +75,13 @@
         {
             <tr>
                 <td>
-                    <a asp-page="./Details" asp-route-id="@item.RecipeID">@Html.DisplayFor(modelItem => item.Name)</a>
+                    <a asp-page="./Details" asp-route-name="@item.Name">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Favorite)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.AddedDate)
@@ -81,15 +90,13 @@
                     @Html.DisplayFor(modelItem => item.UpdatedDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
+                    <input id="rating" class="kv-ltr-theme-svg-star rating-loading rating-disabled" value="@Html.DisplayFor(modelItem => item.Rating)" dir="ltr" data-size="xs" />
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.RecipeID">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.RecipeID">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.RecipeID">Delete</a>
+                    <a asp-page="./Edit" asp-route-name="@item.Name">Edit</a>
                 </td>
             </tr>
         }

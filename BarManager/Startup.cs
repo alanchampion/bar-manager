@@ -15,6 +15,7 @@ using BarManager.Hubs;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace BarManager
 {
@@ -42,23 +43,25 @@ namespace BarManager
             services.AddDbContext<BarManagerContext>(options =>
                 options.UseSqlServer(_util.getDbString(_config)));
 
-            services.AddAuthentication(options => 
+            services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
                 }).AddCookie().AddGoogle(options =>
                 {
-                    if(Util.isLocalEnv())
+                    if (Util.isLocalEnv())
                     {
                         options.ClientId = _config["LocalClientId"];
                         options.ClientSecret = _config["LocalClientSecret"];
-                    } else
+                    }
+                    else
                     {
                         options.ClientId = _config["ClientId"];
                         options.ClientSecret = _config["ClientSecret"];
                     }
-                    
                 });
+
+            services.AddHttpContextAccessor();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -75,21 +78,22 @@ namespace BarManager
             else
             {
                 // TODO undo this for production
-                app.UseExceptionHandler("/Error");
+                ///app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-                // app.UseDeveloperExceptionPage();
+                ///app.UseHsts();
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<IngredientHub>("/ingredientHub");
             });
-
-            app.UseAuthentication();
 
             app.UseMvc();
         }

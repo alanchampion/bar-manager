@@ -9,6 +9,12 @@ namespace BarManager.Models
     {
         public int RecipeID { get; set; }
 
+        public Recipe()
+        {
+            Rating = 0;
+            Price = 0;
+        }
+
         // TODO pull this from logged in user
         [Required]
         public string User { get; set; } = "ERROR USER";
@@ -17,20 +23,23 @@ namespace BarManager.Models
         [Required]
         public string Name { get; set; }
 
-        [StringLength(1000, ErrorMessage = "Instructions can not be longer than 1000 characters.")]
         [Required]
+        public bool Favorite { get; set; }
+
+        [StringLength(1000, ErrorMessage = "Instructions can not be longer than 1000 characters.")]
         public string Instructions { get; set; }
 
         [StringLength(100, ErrorMessage = "Description can not be longer than 100 characters.")]
         public string Description { get; set; }
 
-        [Range(0,100, ErrorMessage = "Rating must be between 0 and 100.")]
-        public int Rating { get; set; }
+        [Range(0.0, 5.0, ErrorMessage = "Rating must be between 0 and 5.")]
+        [Column(TypeName = "decimal(18, 1)")]
+        public double? Rating { get; set; }
 
         [Range(0, 1000, ErrorMessage = "Price must be between $0 and $1000.")]
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
         [Display(Name = "Added Date")]
         [DataType(DataType.Date)]
@@ -50,6 +59,7 @@ namespace BarManager.Models
         {
             return "User: " + User + "\n" +
                 "Name: " + Name + "\n" +
+                "Favorite: " + Favorite + "\n" + 
                 "Instructions: " + Instructions + "\n" +
                 "Description: " + Description + "\n" +
                 "Rating: " + Rating + "\n" +

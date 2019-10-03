@@ -20,6 +20,9 @@
                 @Html.DisplayNameFor(model => model.Ingredients[0].PurchaseDate)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Ingredients[0].Favorite)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Ingredients[0].Owned)
             </th>
             <th></th>
@@ -30,18 +33,21 @@
         {
             <tr>
                 <td>
-                    <a asp-page="./Details" asp-route-id="@item.IngredientID">@Html.DisplayFor(modelItem => item.Name)</a>
+                    <a asp-page="./Details" asp-route-name="@item.Name">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PurchaseDate)
                 </td>
                 <td>
+                    <input class="form-check-inline favoriteCheck" id="@item.IngredientID" asp-for="@item.Favorite" />
+                </td>
+                <td>
                     <input class="form-check-inline ownedCheck" id="@item.IngredientID" asp-for="@item.Owned" />
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.IngredientID">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.IngredientID">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.IngredientID">Delete</a>
+                    <a asp-page="./Edit" asp-route-name="@item.Name">Edit</a> |
+                    <a asp-page="./Details" asp-route-name="@item.Name">Details</a> |
+                    <a asp-page="./Delete" asp-route-name="@item.Name">Delete</a>
                 </td>
             </tr>
         }

@@ -42,7 +42,7 @@ namespace BarManager
             }
             else
             {
-                string dbname = config.GetValue<string>("plugins:rds:env:RDS_DB_NAME");
+                string dbname = config.GetValue<string>("RDS_DB_NAME");
 
                 if (string.IsNullOrEmpty(dbname)) return null;
 

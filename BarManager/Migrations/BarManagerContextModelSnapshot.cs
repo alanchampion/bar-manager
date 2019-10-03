@@ -25,9 +25,14 @@ namespace BarManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Favorite");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(60);
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000);
 
                     b.Property<bool>("Owned");
 
@@ -37,6 +42,9 @@ namespace BarManager.Migrations
                         .IsRequired();
 
                     b.HasKey("IngredientID");
+
+                    b.HasIndex("Name", "User")
+                        .IsUnique();
 
                     b.ToTable("Ingredient");
                 });
@@ -52,18 +60,21 @@ namespace BarManager.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(100);
 
+                    b.Property<bool>("Favorite");
+
                     b.Property<string>("Instructions")
-                        .IsRequired()
                         .HasMaxLength(1000);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(60);
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("Rating");
+                    b.Property<decimal?>("Rating")
+                        .HasConversion(new ValueConverter<decimal, decimal>(v => default(decimal), v => default(decimal), new ConverterMappingHints(precision: 38, scale: 17)))
+                        .HasColumnType("decimal(18, 1)");
 
                     b.Property<DateTime>("UpdatedDate");
 
@@ -71,6 +82,9 @@ namespace BarManager.Migrations
                         .IsRequired();
 
                     b.HasKey("RecipeID");
+
+                    b.HasIndex("Name", "User")
+                        .IsUnique();
 
                     b.ToTable("Recipe");
                 });

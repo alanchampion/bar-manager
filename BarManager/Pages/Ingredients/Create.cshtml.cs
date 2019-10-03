@@ -6,15 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BarManager.Models;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BarManager.Pages.Ingredients
 {
     public class CreateModel : PageModel
     {
         private readonly BarManager.Models.BarManagerContext _context;
-
-        public CreateModel(BarManager.Models.BarManagerContext context)
+        private string _userId { get; }
+        public CreateModel(IHttpContextAccessor httpContextAccessor, BarManager.Models.BarManagerContext context)
         {
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context = context;
         }
 
@@ -35,16 +38,28 @@ namespace BarManager.Pages.Ingredients
 
             var emptyIngredient = new Ingredient
             {
-                User = "achampion"
+                User = _userId
             };
 
             if (await TryUpdateModelAsync<Ingredient>(
                 emptyIngredient,
                 "ingredient",   // Prefix for form value.
-                i => i.Name, i => i.Owned, i => i.PurchaseDate))
+                i => i.Name, i => i.Favorite, i => i.Owned, i => i.PurchaseDate, i => i.Notes))
             {
                 _context.Ingredient.Add(emptyIngredient);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                } 
+                catch (Exception e)
+                {
+                    return Page();
+                }
+                finally
+                {
+                    _context.ChangeTracker.AutoDetectChangesEnabled = true;
+                }
+
                 return RedirectToPage("./Index");
             }
 

@@ -1,4 +1,4 @@
-﻿@page "{id:int?}"
+﻿@page "{name?}"
 @model BarManager.Pages.Ingredients.DetailsModel
 
 @{
@@ -30,14 +30,26 @@
             @Html.DisplayFor(model => model.Ingredient.PurchaseDate)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Ingredient.Favorite)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ingredient.Favorite)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Ingredient.Owned)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Ingredient.Owned)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Ingredient.Notes)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ingredient.Notes)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Ingredient.IngredientID">Edit</a> |
+    <a asp-page="./Edit" asp-route-name="@Model.Ingredient.Name">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>

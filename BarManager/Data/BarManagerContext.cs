@@ -13,5 +13,15 @@ namespace BarManager.Models
         public DbSet<Recipe> Recipe { get; set; }
         public DbSet<Ingredient> Ingredient { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredient { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Ingredient>()
+                .HasIndex(i => new { i.Name, i.User })
+                .IsUnique();
+            modelBuilder.Entity<Recipe>()
+                .HasIndex(r => new { r.Name, r.User })
+                .IsUnique();
+        }
     }
 }

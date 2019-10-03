@@ -6,15 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BarManager.Models;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BarManager.Pages.Recipes
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly BarManager.Models.BarManagerContext _context;
 
-        public CreateModel(BarManager.Models.BarManagerContext context)
+        public CreateModel(IHttpContextAccessor httpContextAccessor, BarManager.Models.BarManagerContext context)
         {
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context = context;
         }
 
@@ -25,6 +30,7 @@ namespace BarManager.Pages.Recipes
 
         [BindProperty]
         public Recipe Recipe { get; set; }
+        private string _userId { get; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -33,10 +39,9 @@ namespace BarManager.Pages.Recipes
                 return Page();
             }
 
-            // TODO use logged in user
             var emptyRecipe = new Recipe
             {
-                User = "achampion",
+                User = _userId,
                 UpdatedDate = DateTime.Now,
                 AddedDate = DateTime.Now
             };
@@ -47,7 +52,18 @@ namespace BarManager.Pages.Recipes
                 r => r.Name, r => r.Instructions, r => r.Description, r => r.Rating, r => r.Price))
             {
                 _context.Recipe.Add(emptyRecipe);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                } 
+                catch (Exception e)
+                {
+                    return Page();
+                }
+                finally
+                {
+                    _context.ChangeTracker.AutoDetectChangesEnabled = true;
+                }
                 return RedirectToPage("./Index");
             }
 

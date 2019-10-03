@@ -1,4 +1,4 @@
-﻿@page "{id:int?}"
+﻿@page "{name?}"
 @model BarManager.Pages.Recipes.EditModel
 
 @{
@@ -13,16 +13,21 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Recipe.RecipeID" />
-            <div class="form-group">
-                <label asp-for="Recipe.User" class="control-label"></label>
-                <input asp-for="Recipe.User" class="form-control" />
-                <span asp-validation-for="Recipe.User" class="text-danger"></span>
-            </div>
+            <input type="hidden" name="id" asp-for="Recipe.RecipeID" />
             <div class="form-group">
                 <label asp-for="Recipe.Name" class="control-label"></label>
                 <input asp-for="Recipe.Name" class="form-control" />
                 <span asp-validation-for="Recipe.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Recipe.Description" class="control-label"></label>
+                <input asp-for="Recipe.Description" class="form-control" />
+                <span asp-validation-for="Recipe.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Recipe.Favorite" /> @Html.DisplayNameFor(model => model.Recipe.Favorite)
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="Recipe.Instructions" class="control-label"></label>
@@ -30,13 +35,8 @@
                 <span asp-validation-for="Recipe.Instructions" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Recipe.Description" class="control-label"></label>
-                <input asp-for="Recipe.Description" class="form-control" />
-                <span asp-validation-for="Recipe.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Recipe.Rating" class="control-label"></label>
-                <input asp-for="Recipe.Rating" class="form-control" />
+                <input asp-for="Recipe.Rating" id="rating" class="kv-ltr-theme-svg-star rating-loading rating-enabled" value="@Model.Recipe.Rating" dir="ltr" data-size="xs" />
                 <span asp-validation-for="Recipe.Rating" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -52,6 +52,7 @@
 </div>
 
 <div>
+    <a asp-page="./Delete" asp-route-name="@Model.Recipe.Name">Delete</a> |
     <a asp-page="./Index">Back to List</a>
 </div>
 

@@ -6,33 +6,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BarManager.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BarManager.Pages.Recipes
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
         private readonly BarManager.Models.BarManagerContext _context;
 
-        public DetailsModel(BarManager.Models.BarManagerContext context)
+        public DetailsModel(IHttpContextAccessor httpContextAccessor, BarManager.Models.BarManagerContext context)
         {
+            _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context = context;
         }
 
         public Recipe Recipe { get; set; }
+        private string _userId { get; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(string name)
         {
-            if (id == null)
+            if (name == null)
             {
                 return NotFound();
             }
 
-            // TODO use logged in user
             Recipe = await _context.Recipe
                         .Include(r => r.RecipeIngredients)
                             .ThenInclude(i => i.Ingredient)
                         .AsNoTracking()
-                        .FirstOrDefaultAsync(m => m.RecipeID == id && m.User == "achampion");
+                        .FirstOrDefaultAsync(m => m.Name == name && m.User == _userId);
 
             if (Recipe == null)
             {
