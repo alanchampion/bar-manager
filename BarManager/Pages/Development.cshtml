@@ -1,0 +1,11 @@
+﻿@page
+@model BarManager.Pages.DevelopmentModel
+@{
+    ViewData["Title"] = "Development";
+}
+
+<h1>Development</h1>
+
+<p>@Model.Testing</p>
+<p>@Model.iis</p>
+<p>@Html.Raw(@Model.Variables)</p>

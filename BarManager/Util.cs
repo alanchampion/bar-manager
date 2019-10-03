@@ -22,7 +22,7 @@ namespace BarManager
         {
             // Console.WriteLine(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            if (!String.IsNullOrEmpty(env) && env.Equals("Local"))
+            if (!String.IsNullOrEmpty(env) && (env.Equals("Development") || env.Equals("Local")))
                 return true;
             else
                 return false;
@@ -46,10 +46,10 @@ namespace BarManager
 
                 if (string.IsNullOrEmpty(dbname)) return null;
 
-                string username = config.GetValue<string>("plugins:rds:env:RDS_USERNAME");
-                string password = config.GetValue<string>("plugins:rds:env:RDS_PASSWORD");
-                string hostname = config.GetValue<string>("plugins:rds:env:RDS_HOSTNAME");
-                string port = config.GetValue<string>("plugins:rds:env:RDS_PORT");
+                string username = config.GetValue<string>("RDS_USERNAME");
+                string password = config.GetValue<string>("RDS_PASSWORD");
+                string hostname = config.GetValue<string>("RDS_HOSTNAME");
+                string port = config.GetValue<string>("RDS_PORT");
                 string dbConnect =  "Server=" + hostname + ";Database=" + dbname + ";User=" + username + ";Password=" + password + ";MultipleActiveResultSets=true;";
                 
                 _logger.LogInformation("Db Connection string: " + dbConnect);

@@ -6,6 +6,7 @@ using BarManager.Models;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace BarManager
 {
@@ -39,7 +40,17 @@ namespace BarManager
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, config) =>
                 {
-                    config.AddJsonFile(@"C:\Program Files\Amazon\ElasticBeanstalk\config\containerconfiguration", optional: true, reloadOnChange: true);
+                    var tempConfig = new ConfigurationBuilder()
+                        .AddJsonFile("C:\\Program Files\\Amazon\\ElasticBeanstalk\\config\\containerconfiguration", optional: true, reloadOnChange: true).Build();
+                    var env = tempConfig.GetSection("iis:env").GetChildren();
+                    List<string> variables = new List<string>();
+
+                    foreach (var envKeyValue in env)
+                    {
+                        variables.Add(envKeyValue.Value);
+                    }
+                    config.AddCommandLine(variables.ToArray());
+                    // config.AddJsonFile(@"C:\Program Files\Amazon\ElasticBeanstalk\config\containerconfiguration", optional: true, reloadOnChange: true);
                 })
                 .UseStartup<Startup>();
     }
